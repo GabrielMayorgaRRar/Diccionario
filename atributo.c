@@ -15,6 +15,46 @@ void Capturar_Atributo(TAtributo *Atributo_Temporal)
     Atributo_Temporal->direccionArchivo = -1;
 }
 
+void Capturar_Tipo_Dato(int *tipo, int *tam)
+{
+    short opcionActual = SIN_SELECCIONS, aux = 0;
+    while (opcionActual < CARACTER || opcionActual > EXTRA)
+    {
+        Menu_Tipo_Datos();
+        printf("INTRODUZCA LA OPERACION QUE DESEA HACER: ");
+        scanf("%hi", &opcionActual);
+        switch (opcionActual)
+        {
+        case CARACTER:
+            *tipo = CARACTER;
+            *tam = sizeof(char);
+            break;
+        case ENTERO:
+            *tipo = ENTERO;
+            *tam = sizeof(int);
+            break;
+        case CADENA:
+            printf("INTRODUZCA EL NUMERO DE CARACTERES: \n");
+            scanf("%hd", &aux);
+            *tipo = CADENA;
+            *tam = aux * sizeof(char);
+            break;
+        default:
+            system("clear");
+            printf("\n\nOPCION NO VALIDA\nPOR FAVOR ELIJA UNA OPCION VALIDA\n\n");
+            break;
+        }
+    }
+}
+
+void Menu_Tipo_Datos(void)
+{
+    puts("----------DATOS DISPONIBLES----------");
+    printf("(%i) CARACTER\n", CARACTER);
+    printf("(%i) ENTERO\n", ENTERO);
+    printf("(%i) CADENA\n", CADENA);
+}
+
 void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], TAtributo Atributo_Temporal)
 {
     FILE *arch;
@@ -83,66 +123,26 @@ void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LI
     }
 }
 
-void Capturar_Tipo_Dato(int *tipo, int *tam)
-{
-    short opcionActual = SIN_SELECCIONS, aux = 0;
-    while (opcionActual < CARACTER || opcionActual > EXTRA)
-    {
-        Menu_Tipo_Datos();
-        printf("INTRODUZCA LA OPERACION QUE DESEA HACER: ");
-        scanf("%hi", &opcionActual);
-        switch (opcionActual)
-        {
-        case CARACTER:
-            *tipo = CARACTER;
-            *tam = sizeof(char);
-            break;
-        case ENTERO:
-            *tipo = ENTERO;
-            *tam = sizeof(int);
-            break;
-        case CADENA:
-            printf("INTRODUZCA EL NUMERO DE CARACTERES: \n");
-            scanf("%hd", &aux);
-            *tipo = CADENA;
-            *tam = aux * sizeof(char);
-            break;
-        default:
-            system("clear");
-            printf("\n\nOPCION NO VALIDA\nPOR FAVOR ELIJA UNA OPCION VALIDA\n\n");
-            break;
-        }
-    }
-}
-
-void Menu_Tipo_Datos(void)
-{
-    puts("----------DATOS DISPONIBLES----------");
-    printf("(%i) CARACTER\n", CARACTER);
-    printf("(%i) ENTERO\n", ENTERO);
-    printf("(%i) CADENA\n", CADENA);
-}
-
 void Imprimir_Atributo_Actual(TAtributo Atributo_Actual)
 {
-  printf("\n-|DATOS DEL ATRIBUTO|-\n");
-  printf("NOMBRE DEL ATRIBUTO: %s\n", Atributo_Actual.nombre);
-  switch (Atributo_Actual.Tipo_de_Atributo)
-  {
-  case ENTERO:
-    printf("TIPO DE DATO: %d (ENTERO)\n", Atributo_Actual.Tipo_de_Atributo);
-    break;
-  case CARACTER:
-    printf("TIPO DE DATO: %d (CARACTER)\n", Atributo_Actual.Tipo_de_Atributo);
-    break;
-  case CADENA:
-    printf("TIPO DE DATO: %d (CADENA)\n", Atributo_Actual.Tipo_de_Atributo);
-    break;
-  default:
-    break;
-  }
-  
-  printf("TAMAÑO: %d\n", Atributo_Actual.Tam);
-  printf("PTRATRIBUTO: %ld\n", Atributo_Actual.ptrAtributo);
-  printf("DIRECCION DEL DICCIONARIO: %ld\n", Atributo_Actual.direccionArchivo);
+    printf("\n-|DATOS DEL ATRIBUTO|-\n");
+    printf("NOMBRE DEL ATRIBUTO: %s\n", Atributo_Actual.nombre);
+    switch (Atributo_Actual.Tipo_de_Atributo)
+    {
+    case ENTERO:
+        printf("TIPO DE DATO: %d (ENTERO)\n", Atributo_Actual.Tipo_de_Atributo);
+        break;
+    case CARACTER:
+        printf("TIPO DE DATO: %d (CARACTER)\n", Atributo_Actual.Tipo_de_Atributo);
+        break;
+    case CADENA:
+        printf("TIPO DE DATO: %d (CADENA)\n", Atributo_Actual.Tipo_de_Atributo);
+        break;
+    default:
+        break;
+    }
+
+    printf("TAMAÑO: %d\n", Atributo_Actual.Tam);
+    printf("PTRATRIBUTO: %ld\n", Atributo_Actual.ptrAtributo);
+    printf("DIRECCION DEL DICCIONARIO: %ld\n", Atributo_Actual.direccionArchivo);
 }
