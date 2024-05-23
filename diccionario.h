@@ -9,7 +9,7 @@
 #include <string.h>
 #include <assert.h>
 #include "entidad.h"
-
+#include "atributo.h"
 typedef enum
 {
     IMPRIMIR_DICCIONARIO = 1,
@@ -23,5 +23,6 @@ typedef enum
 } OpcionSubmenu;
 
 void operar_diccionario(OpcionSubmenu opcionSeleccionada, char *nombreDiccionario);
+void Imprimir_Diccionario(char *nombreDiccionario);
 
 #endif

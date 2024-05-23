@@ -48,3 +48,28 @@ void operar_diccionario(OpcionSubmenu opcionSeleccionada, char *nombreDiccionari
         break;
     }
 }
+
+void Imprimir_Diccionario(char *nombreDiccionario){
+  FILE *arch;
+  long pos;
+  TEntidad Entidad_Actual;
+  TAtributo Atributo_Actual;
+  arch = fopen(nombreDiccionario, "rb");
+  if (arch) {
+    fread(&pos, sizeof(long), 1, arch);
+    while (pos != -1) {
+      fseek(arch, pos, SEEK_SET);
+      fread(&Entidad_Actual, sizeof(TEntidad), 1, arch);
+      imprime_entidad(Entidad_Actual);
+      pos = Entidad_Actual.ptrAtributo;
+      while (pos != -1) {
+        fseek(arch, pos, SEEK_SET);
+        fread(&Atributo_Actual, sizeof(TAtributo), 1, arch);
+        imprime_atributo(Atributo_Actual);
+        pos = Atributo_Actual.ptrAtributo;
+      }
+      pos = Entidad_Actual.ptrEntidad;
+    }
+    fclose(arch);
+  }
+}
