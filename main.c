@@ -31,6 +31,7 @@ short entrada_de_usuario(void)
 
 void procesar_opcion_seleccionada(OpcionMenu opcionSeleccionada)
 {
+    int Existe_Diccionario;
     char nombreDiccionario[MAX_LINE];
     short operacionRealizar = SIN_SELECCION;
 
@@ -38,7 +39,11 @@ void procesar_opcion_seleccionada(OpcionMenu opcionSeleccionada)
     {
     case NUEVO_DICCIONARIO:
         creaArchivo(nombreDiccionario);
-
+        Existe_Diccionario = Abrir_Diccionario(nombreDiccionario);
+        if(Existe_Diccionario==1){
+            printf("\nEL DICCIONARIO YA EXISTE\n");
+            printf("\nABRIENDO...\n\n");
+        }
         do
         {
             mostrar_submenu();
@@ -51,13 +56,18 @@ void procesar_opcion_seleccionada(OpcionMenu opcionSeleccionada)
     case ABRIR_DICCIONARIO:
         printf("Introduce el nombre del diccionario: ");
         scanf(" %[^\n]", nombreDiccionario);
-        do
+        Existe_Diccionario = Abrir_Diccionario(nombreDiccionario);
+        if(Existe_Diccionario==1) {
+            printf("\nABRIENDO...\n\n");
+          do
         {
             mostrar_submenu();
             operacionRealizar = entrada_de_usuario();
             system("clear");
             operar_diccionario((OpcionSubmenu)operacionRealizar, nombreDiccionario);
         } while (operacionRealizar != REGRESAR);
+        }
+        
         break;
     case CERRAR_PROGRAMA:
         puts("Saliendo...");
@@ -70,15 +80,15 @@ void procesar_opcion_seleccionada(OpcionMenu opcionSeleccionada)
 
 void mostrar_submenu(void)
 {
-    puts("----------Operacion a realizar----------");
-    printf("%i) Imprimir diccionario de datos\n", IMPRIMIR_DICCIONARIO);
-    printf("%i) Nueva entidad\n", NUEVA_ENTIDAD);
-    printf("%i) Eliminar entidad\n", ELIMINAR_ENTIDAD);
-    printf("%i) Modificar entidad\n", MODIFICAR_ENTIDAD);
-    printf("%i) Nuevo atributo\n", NUEVO_ATRIBUTO);
-    printf("%i) Eliminar atributo\n", ELIMINAR_ATRIBUTO);
-    printf("%i) Modificar atributo\n", MODIFICAR_ATRIBUTO);
-    printf("%i) Regresar\n", REGRESAR);
+    puts("----------OPERACIONES DISPONIBLES----------");
+    printf("%i) IMPRIMIR DICCIONARIO DE DATOS\n", IMPRIMIR_DICCIONARIO);
+    printf("%i) CREAR UNA NUEVA ENTIDAD\n", NUEVA_ENTIDAD);
+    printf("%i) ELIMINAR ENTIDAD\n", ELIMINAR_ENTIDAD);
+    printf("%i) MODIFICAR UNA ENTIDAD EXISTENTE\n", MODIFICAR_ENTIDAD);
+    printf("%i) CREAR UN NUEVO ATRIBUTO\n", NUEVO_ATRIBUTO);
+    printf("%i) ELIMINAR UN ATRIBUTO\n", ELIMINAR_ATRIBUTO);
+    printf("%i) MODIFICAR UN ATRIBUTO EXISTENTE\n", MODIFICAR_ATRIBUTO);
+    printf("%i) CERRAR Y VOLVER\n", REGRESAR);
 }
 
 void creaArchivo(char nomArch[MAX_LINE])
@@ -94,4 +104,19 @@ void creaArchivo(char nomArch[MAX_LINE])
         fwrite(&cab, sizeof(long), 1, arch);
         fclose(arch);
     }
+}
+
+int Abrir_Diccionario(char *nom_arch) {
+  FILE *arch;
+  int ban = 0;
+  strcat(nom_arch, ".paseme");
+  arch = fopen(nom_arch, "rb");
+  if(arch==NULL) {
+    printf("\nEL DICCIONARIO NO EXSITE\n\n");
+    return ban;
+  }
+  printf("\nEL DICCIONARIO HA SIDO ABIERTO\n\n");
+  ban = 1;
+  fclose(arch);
+  return ban;
 }
