@@ -95,14 +95,15 @@ void procesar_opcion_seleccionada(OpcionMenu opcionSeleccionada)
 void Menu_de_Operaciones(void)
 {
     puts("----------OPERACIONES DISPONIBLES----------");
-    printf("%i) IMPRIMIR EL DICCIONARIO DE DATOS\n", IMPRIMIR_DICCIONARIO);
-    printf("%i) CREAR UNA NUEVA ENTIDAD\n", NUEVA_ENTIDAD);
-    printf("%i) ELIMINAR UNA ENTIDAD\n", ELIMINAR_ENTIDAD);
-    printf("%i) MODIFICAR UNA ENTIDAD EXISTENTE\n", MODIFICAR_ENTIDAD);
-    printf("%i) CREAR UN NUEVO ATRIBUTO\n", NUEVO_ATRIBUTO);
-    printf("%i) ELIMINAR UN ATRIBUTO\n", ELIMINAR_ATRIBUTO);
-    printf("%i) MODIFICAR UN ATRIBUTO EXISTENTE\n", MODIFICAR_ATRIBUTO);
-    printf("%i) CERRAR Y VOLVER\n", REGRESAR);
+    printf("(%i) IMPRIMIR EL DICCIONARIO DE DATOS\n", IMPRIMIR_DICCIONARIO);
+    printf("(%i) CREAR UNA NUEVA ENTIDAD\n", NUEVA_ENTIDAD);
+    printf("(%i) ELIMINAR UNA ENTIDAD\n", ELIMINAR_ENTIDAD);
+    printf("(%i) MODIFICAR UNA ENTIDAD EXISTENTE\n", MODIFICAR_ENTIDAD);
+    printf("(%i) CREAR UN NUEVO ATRIBUTO\n", NUEVO_ATRIBUTO);
+    printf("(%i) ELIMINAR UN ATRIBUTO\n", ELIMINAR_ATRIBUTO);
+    printf("(%i) MODIFICAR UN ATRIBUTO EXISTENTE\n", MODIFICAR_ATRIBUTO);
+    printf("(%i) LIMPIAR PANTALLA\n", LIMPIAR_PANTALLA);
+    printf("(%i) CERRAR Y VOLVER\n", REGRESAR);
 }
 
 void Crear_Diccionario(char nomArch[MAX_LINE])

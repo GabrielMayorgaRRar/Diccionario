@@ -5,7 +5,7 @@ void operar_diccionario(OpcionSubmenu opcionSeleccionada, char *nombreDiccionari
 {
   TEntidad Entidad_Temporal;
   TAtributo Atributo_Temporal;
-  char Nombre[MAX_LINE];
+  char Nombre[MAX_LINE], Nombre_2[MAX_LINE];
   switch (opcionSeleccionada)
   {
   case IMPRIMIR_DICCIONARIO:
@@ -38,14 +38,27 @@ void operar_diccionario(OpcionSubmenu opcionSeleccionada, char *nombreDiccionari
     break;
   case ELIMINAR_ATRIBUTO:
     printf("\n-- HAS SELECCIONADO 'ELIMINAR UN ATRIBUTO' --\n\n");
+    printf("INTRODUZCA EL NOMBRE DE LA ENTIDAD A LA QUE DESEE ELIMINAR EL ATRIBUTO: \n");
+    scanf(" %[^\n]", Nombre);
+    printf("INTRODUZCA EL NOMBRE DEL ATRIBUTO QUE DESEE ELIMINAR: \n");
+    scanf(" %[^\n]", Nombre_2);
+    Atributo_Temporal = Eliminar_Atributo(nombreDiccionario, Nombre, Nombre_2);
     break;
   case MODIFICAR_ATRIBUTO:
     printf("\n-- HAS SELECCIONADO 'MODIFICAR UN ATRIBUTO EXISTENTE' --\n\n");
+    printf("INTRODUZCA EL NOMBRE DE LA ENTIDAD A LA QUE DESEE ELIMINAR EL ATRIBUTO: \n");
+    scanf(" %[^\n]", Nombre);
+    printf("INTRODUZCA EL NOMBRE DEL ATRIBUTO QUE DESEE MODIFICAR: \n");
+    scanf(" %[^\n]", Nombre_2);
+    Modificar_Atributo(nombreDiccionario, Nombre, Nombre_2);
     break;
   case REGRESAR:
     printf("\nREGRESANDO...\n");
     FILE *archivo = fopen(nombreDiccionario, "rb");
     fclose(archivo);
+    break;
+  case LIMPIAR_PANTALLA:
+    system("clear");
     break;
   default:
     system("clear");

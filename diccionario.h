@@ -19,6 +19,7 @@ typedef enum
     NUEVO_ATRIBUTO,
     ELIMINAR_ATRIBUTO,
     MODIFICAR_ATRIBUTO,
+    LIMPIAR_PANTALLA,
     REGRESAR
 } OpcionSubmenu;
 

@@ -4,7 +4,7 @@ void Capturar_Atributo(TAtributo *Atributo_Temporal)
 {
     int aux = 0, naux = 0;
     int auxtipo, auxtam, auxclave;
-    printf("INTRODUZCA EL NOMBRE QUE LE DESEE ASIGANAR AL ATRIBUTO: \n");
+    printf("INTRODUZCA EL NOMBRE QUE LE DESEE ASIGNAR AL ATRIBUTO: \n");
     scanf(" %[^\n]", Atributo_Temporal->nombre);
     Atributo_Temporal->Tipo_de_Atributo = 0;
     printf("INTRODUZCA EL TIPO DE DATO: \n");
@@ -15,7 +15,7 @@ void Capturar_Atributo(TAtributo *Atributo_Temporal)
     Atributo_Temporal->direccionArchivo = -1;
 }
 
-void Capturar_Tipo_Dato(int *tipo, int *tam)
+void Capturar_Tipo_Dato(int *TipoD, int *Tam)
 {
     short opcionActual = SIN_SELECCIONS, aux = 0;
     while (opcionActual < CARACTER || opcionActual > EXTRA)
@@ -26,18 +26,18 @@ void Capturar_Tipo_Dato(int *tipo, int *tam)
         switch (opcionActual)
         {
         case CARACTER:
-            *tipo = CARACTER;
-            *tam = sizeof(char);
+            *TipoD = CARACTER;
+            *Tam = sizeof(char);
             break;
         case ENTERO:
-            *tipo = ENTERO;
-            *tam = sizeof(int);
+            *TipoD = ENTERO;
+            *Tam = sizeof(int);
             break;
         case CADENA:
             printf("INTRODUZCA EL NUMERO DE CARACTERES: \n");
             scanf("%hd", &aux);
-            *tipo = CADENA;
-            *tam = aux * sizeof(char);
+            *TipoD = CADENA;
+            *Tam = aux * sizeof(char);
             break;
         default:
             system("clear");
@@ -83,8 +83,6 @@ void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LI
                 fseek(arch, 0, SEEK_END);
                 Atributo_Temporal.direccionArchivo = ftell(arch);
                 Atributo_Temporal.ptrEntidad = Entidad_Temporal.ptrEntidad;
-
-                // Verificar si el atributo ya existe en la entidad
                 pos = Entidad_Temporal.ptrAtributo;
                 while (pos != -1)
                 {
@@ -92,7 +90,7 @@ void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LI
                     fread(&Atributo_Actual, sizeof(TAtributo), 1, arch);
                     if (strcmp(Atributo_Temporal.nombre, Atributo_Actual.nombre) == 0)
                     {
-                        printf("\n-- EL ATRIBUTO YA EXISTE EN LA ENTIDAD --\n\n");
+                        printf("\n-- YA EXISTE UN ATRIBUTO CON EL MISMO NOMBRE EN LA ENTIDAD --\n\n");
                         fclose(arch);
                         return;
                     }
@@ -165,15 +163,14 @@ TAtributo Eliminar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[
             {
                 if (Entidad_Actual.ptrAtributo != -1)
                 {
-                    pos = Entidad_Actual.ptrAtributo;
                     fseek(arch, Entidad_Actual.ptrAtributo, SEEK_SET);
-                    fread(&Entidad_Actual, sizeof(TAtributo), 1, arch);
+                    fread(&Atributo_Actual, sizeof(TAtributo), 1, arch);
                     if (strcmp(nombre_Atributo, Atributo_Actual.nombre) == 0)
                     {
-                        Atributo_Resultante = Atributo_Actual;
                         Entidad_Actual.ptrAtributo = Atributo_Actual.ptrAtributo;
                         fseek(arch, Entidad_Actual.direccionArchivo, SEEK_SET);
                         fwrite(&Entidad_Actual, sizeof(TEntidad), 1, arch);
+                        printf("\n-- EL ATRIBUTO HA SIDO ELIMINADO CORRECTAMENTE --\n\n");
                     }
                     else
                     {
@@ -186,25 +183,26 @@ TAtributo Eliminar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[
                         }
                         if (strcmp(nombre_Atributo, Atributo_Actual.nombre) == 0)
                         {
-                            Atributo_Resultante = Atributo_Actual;
+                            // Eliminar el atributo
                             Atributo_Anterior.ptrAtributo = Atributo_Actual.ptrAtributo;
                             fseek(arch, Atributo_Anterior.direccionArchivo, SEEK_SET);
                             fwrite(&Atributo_Anterior, sizeof(TAtributo), 1, arch);
+                            printf("\n-- EL ATRIBUTO HA SIDO ELIMINADO CORRECTAMENTE --\n\n");
                         }
                         else
                         {
-                            printf("\nEL ATRIBUTO NO EXISTE, ME HICISTE BUSCAR EN VANO πππ \n");
+                            printf("\n-- EL ATRIBUTO NO EXISTE --\n\n");
                         }
                     }
                 }
                 else
                 {
-                    printf("\n-- LA ENTIDAD NO TIENE ATRIBUTOS, ME HICISTE BUSCAR EN VANO πππ  --\n\n");
+                    printf("\n-- LA ENTIDAD NO TIENE ATRIBUTOS --\n\n");
                 }
             }
             else
             {
-                printf("\n-- LA ENTIDAD NO EXISTE, ME HICISTE BUSCAR EN VANO πππ  --\n\n");
+                printf("\n-- LA ENTIDAD NO EXISTE --\n\n");
             }
         }
         else
@@ -218,6 +216,55 @@ TAtributo Eliminar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[
         printf("\n-- NO SE ENCONTRO EL DICCIONARIO --\n\n");
     }
     return Atributo_Resultante;
+}
+
+void Modificar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], char nombre_Atributo[MAX_LINE])
+{
+    TAtributo Atributo_Auxiliar, Atributo_Modificado;
+    char Nombre[100];
+    short opcionActual = SIN_SELECCIO;
+    int Auxiliar_Tipo, Auxiliar_Tam;
+    Atributo_Auxiliar = Eliminar_Atributo(nom_Diccionario, nombre_Entidad, nombre_Atributo);
+    Atributo_Modificado = Atributo_Auxiliar;
+    while (opcionActual != CONTINUAR)
+    {
+        Menu_Modificar_Atributo();
+        printf("INTRODUZCA EL DATO QUE DESEA MODIFICAR: ");
+        scanf("%hi", &opcionActual);
+        switch (opcionActual)
+        {
+        case 1:
+            printf("INTRODUZCA EL NUEVO NOMBRE: ");
+            scanf(" %[^\n]", Nombre);
+            strcpy(Atributo_Modificado.nombre, Nombre);
+            break;
+        case 2:
+            Capturar_Tipo_Dato(&Auxiliar_Tipo, &Auxiliar_Tam);
+            Atributo_Modificado.Tipo_de_Atributo = Auxiliar_Tipo;
+            Atributo_Modificado.Tam = Auxiliar_Tam;
+            break;
+        case 3:
+            system("clear");
+            printf("Continuando...\n");
+            break;
+
+        default:
+            system("clear");
+            printf("\n\nOPCION NO VALIDA\nPOR FAVOR ELIJA UNA OPCION VALIDA\n\n");
+            break;
+        }
+    }
+    Atributo_Modificado.ptrAtributo = -1;
+    Atributo_Modificado.direccionArchivo = -1;
+    Agregar_Atributo(nom_Diccionario, nombre_Entidad, Atributo_Modificado);
+}
+
+void Menu_Modificar_Atributo(void)
+{
+    puts("----------MODIFICACIONES DISPONIBLES----------");
+    printf("(%i) NOMBRE\n", NOMBRE);
+    printf("(%i) TIPO DE DATO\n", TIPO);
+    printf("(%i) CONTINUAR\n", CONTINUAR);
 }
 
 void Imprimir_Atributo_Actual(TAtributo Atributo_Actual)

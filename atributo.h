@@ -21,6 +21,14 @@ typedef enum tipoAtributo
     EXTRA
 } TipoAtributo;
 
+typedef enum modificarAtributo
+{
+    SIN_SELECCIO,
+    NOMBRE,
+    TIPO,
+    CONTINUAR
+} TMAtributo;
+
 typedef struct atributo
 {
     TipoAtributo Tipo_de_Atributo;
@@ -33,7 +41,9 @@ typedef struct atributo
 
 void Capturar_Atributo(TAtributo *Atributo_Temporal);
 void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], TAtributo Atributo_Temporal);
-void Capturar_Tipo_Dato(int *tipo, int *tam);
+void Modificar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], char nombre_Atributo[MAX_LINE]);
+void Capturar_Tipo_Dato(int *TipoD, int *Tama);
+void Menu_Modificar_Atributo(void);
 TAtributo Eliminar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], char nombre_Atributo[MAX_LINE]);
 void Menu_Tipo_Datos(void);
 
