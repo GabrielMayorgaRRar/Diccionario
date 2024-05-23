@@ -34,6 +34,7 @@ typedef struct atributo
 void Capturar_Atributo(TAtributo *Atributo_Temporal);
 void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], TAtributo Atributo_Temporal);
 void Capturar_Tipo_Dato(int *tipo, int *tam);
+TAtributo Eliminar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], char nombre_Atributo[MAX_LINE]);
 void Menu_Tipo_Datos(void);
 
 #endif

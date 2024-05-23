@@ -83,6 +83,22 @@ void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LI
                 fseek(arch, 0, SEEK_END);
                 Atributo_Temporal.direccionArchivo = ftell(arch);
                 Atributo_Temporal.ptrEntidad = Entidad_Temporal.ptrEntidad;
+
+                // Verificar si el atributo ya existe en la entidad
+                pos = Entidad_Temporal.ptrAtributo;
+                while (pos != -1)
+                {
+                    fseek(arch, pos, SEEK_SET);
+                    fread(&Atributo_Actual, sizeof(TAtributo), 1, arch);
+                    if (strcmp(Atributo_Temporal.nombre, Atributo_Actual.nombre) == 0)
+                    {
+                        printf("\n-- EL ATRIBUTO YA EXISTE EN LA ENTIDAD --\n\n");
+                        fclose(arch);
+                        return;
+                    }
+                    pos = Atributo_Actual.ptrAtributo;
+                }
+
                 if (Entidad_Temporal.ptrAtributo == -1)
                 {
                     Entidad_Temporal.ptrAtributo = Atributo_Temporal.direccionArchivo;
@@ -118,9 +134,90 @@ void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LI
     }
     else
     {
-        printf("\n");
-        printf("-- NO SE ENCONTRO EL DICCIONARIO --\n\n");
+        printf("\n-- NO SE ENCONTRO EL DICCIONARIO --\n\n");
     }
+}
+
+TAtributo Eliminar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], char nombre_Atributo[MAX_LINE])
+{
+    FILE *arch;
+    TEntidad Entidad_Actual;
+    TAtributo Atributo_Actual, Atributo_Anterior, Atributo_Resultante;
+    long pos;
+    int enc = 0;
+    arch = fopen(nom_Diccionario, "rb+");
+    if (arch)
+    {
+        fread(&pos, sizeof(long), 1, arch);
+        if (pos != -1)
+        {
+            while (pos != -1 && !enc)
+            {
+                fseek(arch, pos, SEEK_SET);
+                fread(&Entidad_Actual, sizeof(TEntidad), 1, arch);
+                if (strcmp(nombre_Entidad, Entidad_Actual.nombre) == 0)
+                {
+                    enc = 1;
+                }
+                pos = Entidad_Actual.ptrEntidad;
+            }
+            if (enc)
+            {
+                if (Entidad_Actual.ptrAtributo != -1)
+                {
+                    pos = Entidad_Actual.ptrAtributo;
+                    fseek(arch, Entidad_Actual.ptrAtributo, SEEK_SET);
+                    fread(&Entidad_Actual, sizeof(TAtributo), 1, arch);
+                    if (strcmp(nombre_Atributo, Atributo_Actual.nombre) == 0)
+                    {
+                        Atributo_Resultante = Atributo_Actual;
+                        Entidad_Actual.ptrAtributo = Atributo_Actual.ptrAtributo;
+                        fseek(arch, Entidad_Actual.direccionArchivo, SEEK_SET);
+                        fwrite(&Entidad_Actual, sizeof(TEntidad), 1, arch);
+                    }
+                    else
+                    {
+                        while (Atributo_Actual.ptrAtributo != -1 &&
+                               strcmp(nombre_Atributo, Atributo_Actual.nombre) != 0)
+                        {
+                            Atributo_Anterior = Atributo_Actual;
+                            fseek(arch, Atributo_Actual.ptrAtributo, SEEK_SET);
+                            fread(&Atributo_Actual, sizeof(TAtributo), 1, arch);
+                        }
+                        if (strcmp(nombre_Atributo, Atributo_Actual.nombre) == 0)
+                        {
+                            Atributo_Resultante = Atributo_Actual;
+                            Atributo_Anterior.ptrAtributo = Atributo_Actual.ptrAtributo;
+                            fseek(arch, Atributo_Anterior.direccionArchivo, SEEK_SET);
+                            fwrite(&Atributo_Anterior, sizeof(TAtributo), 1, arch);
+                        }
+                        else
+                        {
+                            printf("\nEL ATRIBUTO NO EXISTE, ME HICISTE BUSCAR EN VANO πππ \n");
+                        }
+                    }
+                }
+                else
+                {
+                    printf("\n-- LA ENTIDAD NO TIENE ATRIBUTOS, ME HICISTE BUSCAR EN VANO πππ  --\n\n");
+                }
+            }
+            else
+            {
+                printf("\n-- LA ENTIDAD NO EXISTE, ME HICISTE BUSCAR EN VANO πππ  --\n\n");
+            }
+        }
+        else
+        {
+            printf("\n-- EL DICCIONARIO ESTA VACIO --\n\n");
+        }
+        fclose(arch);
+    }
+    else
+    {
+        printf("\n-- NO SE ENCONTRO EL DICCIONARIO --\n\n");
+    }
+    return Atributo_Resultante;
 }
 
 void Imprimir_Atributo_Actual(TAtributo Atributo_Actual)
