@@ -4,6 +4,7 @@
 void operar_diccionario(OpcionSubmenu opcionSeleccionada, char *nombreDiccionario)
 {
   TEntidad Entidad_Temporal;
+  TAtributo Atributo_Temporal;
   char Nombre[MAX_LINE];
   switch (opcionSeleccionada)
   {
@@ -30,6 +31,10 @@ void operar_diccionario(OpcionSubmenu opcionSeleccionada, char *nombreDiccionari
     break;
   case NUEVO_ATRIBUTO:
     printf("\n-- HAS SELECCIONADO 'CREAR UN NUEVO ATRIBUTO' --\n\n");
+    printf("INTRODUZCA EL NOMBRE DE LA ENTIDAD A LA QUE DESEE AGREGAR EL ATRIBUTO: \n");
+    scanf(" %[^\n]", Nombre);
+    Capturar_Atributo(&Atributo_Temporal);
+    Agregar_Atributo(nombreDiccionario, Nombre, Atributo_Temporal);
     break;
   case ELIMINAR_ATRIBUTO:
     printf("\n-- HAS SELECCIONADO 'ELIMINAR UN ATRIBUTO' --\n\n");

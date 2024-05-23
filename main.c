@@ -15,10 +15,10 @@ int main(void)
 
 void mostrar_menu(void)
 {
-    puts("----------Diccionario de Datos----------");
-    printf("%i) CREAR UN NUEVO DICCIONARIO\n", NUEVO_DICCIONARIO);
-    printf("%i) ABRIR UN DICCIONARIO EXISTENTE\n", ABRIR_DICCIONARIO);
-    printf("%i) SALIR\n", CERRAR_PROGRAMA);
+    puts("----------MENU DICCIONARIO DE DATOS----------");
+    printf("(%i) CREAR UN NUEVO DICCIONARIO\n", NUEVO_DICCIONARIO);
+    printf("(%i) ABRIR UN DICCIONARIO EXISTENTE\n", ABRIR_DICCIONARIO);
+    printf("(%i) SALIR\n", CERRAR_PROGRAMA);
 }
 
 short entrada_de_usuario(void)

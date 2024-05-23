@@ -5,16 +5,20 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
+#include "entidad.h"
 
 #define CABECERA_POSICION_PRINCIPAL 0L
 #define NOMBRE_ATRIBUTO 50
 #define SIN_DIRECCION -1L
+#define MAX_LINE 50
 
 typedef enum tipoAtributo
 {
+    SIN_SELECCION,
     CARACTER,
     ENTERO,
-    CADENA
+    CADENA,
+    EXTRA
 } TipoAtributo;
 
 typedef struct atributo
@@ -23,7 +27,12 @@ typedef struct atributo
     char nombre[NOMBRE_ATRIBUTO];
     int Tam;
     long ptrAtributo;
+    long ptrEntidad;
     long direccionArchivo;
 } TAtributo;
+
+void Capturar_Atributo(TAtributo *Atributo_Temporal);
+void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], TAtributo Atributo_Temporal);
+void Menu_Tipo_Datos(void);
 
 #endif
