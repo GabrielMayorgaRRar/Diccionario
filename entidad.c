@@ -35,7 +35,7 @@ void Crear_Nueva_Entidad(char nom_arch[MAX_LINE], TEntidad Entidad_Temporal)
 
             if (strcmp(Entidad_Temporal.nombre, Entidad_Actual.nombre) == 0)
             {
-                printf("\n-- LA ENTIDAD '%s' YA EXISTE. NO SE PUEDE AGREGAR. --\n", Entidad_Temporal.nombre);
+                printf("\n-- LA ENTIDAD '%s' YA EXISTE. NO SE PUEDE AGREGAR. --\n\n", Entidad_Temporal.nombre);
                 fclose(arch);
                 return;
             }
@@ -57,7 +57,7 @@ void Crear_Nueva_Entidad(char nom_arch[MAX_LINE], TEntidad Entidad_Temporal)
                 }
                 if (strcmp(Entidad_Temporal.nombre, Entidad_Actual.nombre) == 0)
                 {
-                    printf("\n-- LA ENTIDAD '%s' YA EXISTE. NO SE PUEDE AGREGAR. --\n", Entidad_Temporal.nombre);
+                    printf("\n-- LA ENTIDAD '%s' YA EXISTE. NO SE PUEDE AGREGAR. --\n\n", Entidad_Temporal.nombre);
                     fclose(arch);
                     return;
                 }
@@ -80,12 +80,12 @@ void Crear_Nueva_Entidad(char nom_arch[MAX_LINE], TEntidad Entidad_Temporal)
 
         fseek(arch, Entidad_Temporal.direccionArchivo, SEEK_SET);
         fwrite(&Entidad_Temporal, sizeof(TEntidad), 1, arch);
-        printf("\n-- LA ENTIDAD '%s' HA SIDO AGREGADA CORRECTAMENTE. -- \n", Entidad_Temporal.nombre);
+        printf("\n-- LA ENTIDAD '%s' HA SIDO AGREGADA CORRECTAMENTE. -- \n\n", Entidad_Temporal.nombre);
         fclose(arch);
     }
     else
     {
-        printf("-- NO SE ENCONTRO EL DICCIONARIO --\n");
+        printf("-- NO SE ENCONTRO EL DICCIONARIO --\n\n");
     }
 }
 
@@ -135,18 +135,18 @@ TEntidad Eliminar_Entidad(char nom_Diccionario[MAX_LINE], char nom_Entidad[MAX_L
             }
             else
             {
-                printf("\n-- LA ENTIDAD NO EXISTE, ME HICISTE BUSCAR EN VANO πππ --\n");
+                printf("\n-- LA ENTIDAD NO EXISTE, ME HICISTE BUSCAR EN VANO πππ --\n\n");
             }
         }
         else
         {
-            printf("\n-- EL DICCIONARIO ESTA VACIO --\n");
+            printf("\n-- EL DICCIONARIO ESTA VACIO --\n\n");
         }
         fclose(arch);
     }
     else
     {
-        printf("\n-- NO SE ENCONTRO EL DICCIONARIO --\n");
+        printf("\n-- NO SE ENCONTRO EL DICCIONARIO --\n\n");
     }
     return Entidad_Resultante;
 }
@@ -185,7 +185,7 @@ void modificar_Entidad(char nom_Archivo[MAX_LINE], char nom_Entidad[MAX_LINE])
                 fwrite(&Entidad_Modificada, sizeof(TEntidad), 1, arch);
 
                 encontrada = 1;
-                printf("\nLA ENTIDAD '%s' SE MODIFICO CORRECTAMENTE.\n", nom_Entidad);
+                printf("\nLA ENTIDAD '%s' SE MODIFICO CORRECTAMENTE.\n\n", nom_Entidad);
                 break;
             }
             cab = Entidad_Auxiliar.ptrEntidad;
@@ -193,13 +193,13 @@ void modificar_Entidad(char nom_Archivo[MAX_LINE], char nom_Entidad[MAX_LINE])
 
         if (!encontrada)
         {
-            printf("\nLA ENTIDAD '%s' NO FUE ENCONTRADA EN EL ARCHIVO.\n", nom_Entidad);
+            printf("\nLA ENTIDAD '%s' NO FUE ENCONTRADA EN EL ARCHIVO.\n\n", nom_Entidad);
         }
 
         fclose(arch);
     }
     else
     {
-        printf("\n-- NO SE ENCONTRO EL DICCIONARIO --\n");
+        printf("\n-- NO SE ENCONTRO EL DICCIONARIO --\n\n");
     }
 }
