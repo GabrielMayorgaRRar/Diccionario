@@ -22,6 +22,6 @@ typedef enum
     REGRESAR
 } OpcionSubmenu;
 
-void operar_diccionario(OpcionSubmenu opcionSeleccionada, const char *nombreDiccionario);
+void operar_diccionario(OpcionSubmenu opcionSeleccionada, char *nombreDiccionario);
 
 #endif

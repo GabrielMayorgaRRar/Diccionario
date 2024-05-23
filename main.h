@@ -17,9 +17,10 @@ typedef enum opciones
 void mostrar_menu(void);
 short entrada_de_usuario(void);
 void procesar_opcion_seleccionada(OpcionMenu opcionSeleccionada);
-void mostrar_submenu(void);
-void creaArchivo(char nomArch[MAX_LINE]);
+void Menu_de_Operaciones(void);
+void Crear_Diccionario(char nomArch[MAX_LINE]);
 //Como se va a añadir ".pasame" ocupo modificarlo
 int Abrir_Diccionario(char *nom_arch);
+int Diccionario_Existir(char *nombre_archivo);
 
 #endif
