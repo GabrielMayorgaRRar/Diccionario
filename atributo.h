@@ -19,9 +19,9 @@ typedef enum tipoAtributo
 
 typedef struct atributo
 {
-    TipoAtributo tipo;
+    TipoAtributo Tipo_de_Atributo;
     char nombre[NOMBRE_ATRIBUTO];
-    int Largo;
+    int Tam;
     long ptrAtributo;
     long direccionArchivo;
 } TAtributo;
