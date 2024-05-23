@@ -88,22 +88,3 @@ void Imprimir_Diccionario(char *nombreDiccionario)
     fclose(arch);
   }
 }
-
-void Imprimir_Entidad_Actual(TEntidad Entidad_Actual)
-{
-  printf("\n-|DATOS DE LA ENTIDAD|-\n");
-  printf("-NOMBRE DE LA ENTIDAD: %s\n", Entidad_Actual.nombre);
-  printf("-PTRENTIDAD: %ld\n", Entidad_Actual.ptrEntidad);
-  printf("-PTRATRIBUTO: %ld\n", Entidad_Actual.ptrAtributo);
-  printf("DIRECCION DEL DICCIONARIO: %ld\n", Entidad_Actual.direccionArchivo);
-}
-
-void Imprimir_Atributo_Actual(TAtributo Atributo_Actual)
-{
-  printf("\n-|DATOS DEL ATRIBUTO|-\n");
-  printf("NOMBRE DEL ATRIBUTO: %s\n", Atributo_Actual.nombre);
-  printf("TIPOD DE DATO: %d\n", Atributo_Actual.Tipo_de_Atributo);
-  printf("TAMAÑO: %d\n", Atributo_Actual.Tam);
-  printf("PTRATRIBUTO: %ld\n", Atributo_Actual.ptrAtributo);
-  printf("DIRECCION DEL DICCIONARIO: %ld\n", Atributo_Actual.direccionArchivo);
-}

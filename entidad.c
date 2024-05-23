@@ -203,3 +203,12 @@ void modificar_Entidad(char nom_Archivo[MAX_LINE], char nom_Entidad[MAX_LINE])
         printf("\n-- NO SE ENCONTRO EL DICCIONARIO --\n\n");
     }
 }
+
+void Imprimir_Entidad_Actual(TEntidad Entidad_Actual)
+{
+  printf("\n-|DATOS DE LA ENTIDAD|-\n");
+  printf("-NOMBRE DE LA ENTIDAD: %s\n", Entidad_Actual.nombre);
+  printf("-PTRENTIDAD: %ld\n", Entidad_Actual.ptrEntidad);
+  printf("-PTRATRIBUTO: %ld\n", Entidad_Actual.ptrAtributo);
+  printf("DIRECCION DEL DICCIONARIO: %ld\n", Entidad_Actual.direccionArchivo);
+}

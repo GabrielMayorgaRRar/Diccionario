@@ -8,7 +8,7 @@ void Capturar_Atributo(TAtributo *Atributo_Temporal)
     scanf(" %[^\n]", Atributo_Temporal->nombre);
     Atributo_Temporal->Tipo_de_Atributo = 0;
     printf("INTRODUZCA EL TIPO DE DATO: \n");
-    captura_tipo(&auxtipo, &auxtam);
+    Capturar_Tipo_Dato(&auxtipo, &auxtam);
     Atributo_Temporal->Tipo_de_Atributo = auxtipo;
     Atributo_Temporal->Tam = auxtam;
     Atributo_Temporal->ptrAtributo = -1;
@@ -83,9 +83,9 @@ void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LI
     }
 }
 
-void captura_tipo(int *tipo, int *tam)
+void Capturar_Tipo_Dato(int *tipo, int *tam)
 {
-    short opcionActual = SIN_SELECCION, aux = 0;
+    short opcionActual = SIN_SELECCIONS, aux = 0;
     while (opcionActual < CARACTER || opcionActual > EXTRA)
     {
         Menu_Tipo_Datos();
@@ -103,7 +103,7 @@ void captura_tipo(int *tipo, int *tam)
             break;
         case CADENA:
             printf("INTRODUZCA EL NUMERO DE CARACTERES: \n");
-            scanf("%d", &aux);
+            scanf("%hd", &aux);
             *tipo = CADENA;
             *tam = aux * sizeof(char);
             break;
@@ -121,4 +121,28 @@ void Menu_Tipo_Datos(void)
     printf("(%i) CARACTER\n", CARACTER);
     printf("(%i) ENTERO\n", ENTERO);
     printf("(%i) CADENA\n", CADENA);
+}
+
+void Imprimir_Atributo_Actual(TAtributo Atributo_Actual)
+{
+  printf("\n-|DATOS DEL ATRIBUTO|-\n");
+  printf("NOMBRE DEL ATRIBUTO: %s\n", Atributo_Actual.nombre);
+  switch (Atributo_Actual.Tipo_de_Atributo)
+  {
+  case ENTERO:
+    printf("TIPO DE DATO: %d (ENTERO)\n", Atributo_Actual.Tipo_de_Atributo);
+    break;
+  case CARACTER:
+    printf("TIPO DE DATO: %d (CARACTER)\n", Atributo_Actual.Tipo_de_Atributo);
+    break;
+  case CADENA:
+    printf("TIPO DE DATO: %d (CADENA)\n", Atributo_Actual.Tipo_de_Atributo);
+    break;
+  default:
+    break;
+  }
+  
+  printf("TAMAÑO: %d\n", Atributo_Actual.Tam);
+  printf("PTRATRIBUTO: %ld\n", Atributo_Actual.ptrAtributo);
+  printf("DIRECCION DEL DICCIONARIO: %ld\n", Atributo_Actual.direccionArchivo);
 }
