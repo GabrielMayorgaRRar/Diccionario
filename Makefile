@@ -7,4 +7,4 @@ TARGET = a.out
 all:
 	${CC} ${SRC} -o ${TARGET}
 clear:
-	rm *.out 
+	rm *.out *.paseme 
