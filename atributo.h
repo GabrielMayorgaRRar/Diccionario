@@ -11,6 +11,8 @@
 #define NOMBRE_ATRIBUTO 50
 #define SIN_DIRECCION -1L
 #define MAX_LINE 50
+#define MAX_ATRIBUTOS 1000000
+#define A -1
 
 typedef enum tipoAtributo
 {
@@ -46,5 +48,6 @@ void Capturar_Tipo_Dato(int *TipoD, int *Tama);
 void Menu_Modificar_Atributo(void);
 TAtributo Eliminar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], char nombre_Atributo[MAX_LINE]);
 void Menu_Tipo_Datos(void);
+TAtributo Buscar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], char nombre_Atributo[MAX_LINE]);
 
 #endif

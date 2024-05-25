@@ -21,24 +21,20 @@ void Crear_Nueva_Entidad(char nom_arch[MAX_LINE], TEntidad Entidad_Temporal)
         fread(&cab, sizeof(long), 1, arch);
         fseek(arch, 0, SEEK_END);
         Entidad_Temporal.direccionArchivo = ftell(arch);
+        Entidad_Temporal.ptrEntidad = -1;
 
         if (cab == -1)
         {
+            // Lista vacía, inserta la primera entidad
             fseek(arch, 0, SEEK_SET);
             cab = Entidad_Temporal.direccionArchivo;
             fwrite(&cab, sizeof(long), 1, arch);
         }
         else
         {
+            // Inserta en la posición correcta
             fseek(arch, cab, SEEK_SET);
             fread(&Entidad_Actual, sizeof(TEntidad), 1, arch);
-
-            if (strcmp(Entidad_Temporal.nombre, Entidad_Actual.nombre) == 0)
-            {
-                printf("\n-- LA ENTIDAD '%s' YA EXISTE. NO SE PUEDE AGREGAR. --\n\n", Entidad_Temporal.nombre);
-                fclose(arch);
-                return;
-            }
 
             if (strcmp(Entidad_Temporal.nombre, Entidad_Actual.nombre) < 0)
             {
@@ -49,45 +45,42 @@ void Crear_Nueva_Entidad(char nom_arch[MAX_LINE], TEntidad Entidad_Temporal)
             }
             else
             {
+                long posAnterior = -1;
                 while (Entidad_Actual.ptrEntidad != -1 && strcmp(Entidad_Temporal.nombre, Entidad_Actual.nombre) > 0)
                 {
+                    posAnterior = ftell(arch) - sizeof(TEntidad);
                     Entidad_Anterior = Entidad_Actual;
                     fseek(arch, Entidad_Anterior.ptrEntidad, SEEK_SET);
                     fread(&Entidad_Actual, sizeof(TEntidad), 1, arch);
                 }
-                if (strcmp(Entidad_Temporal.nombre, Entidad_Actual.nombre) == 0)
-                {
-                    printf("\n-- LA ENTIDAD '%s' YA EXISTE. NO SE PUEDE AGREGAR. --\n\n", Entidad_Temporal.nombre);
-                    fclose(arch);
-                    return;
-                }
 
-                if (strcmp(Entidad_Temporal.nombre, Entidad_Actual.nombre) < 0)
-                {
-                    Entidad_Anterior.ptrEntidad = Entidad_Temporal.direccionArchivo;
-                    Entidad_Temporal.ptrEntidad = Entidad_Actual.direccionArchivo;
-                    fseek(arch, Entidad_Anterior.direccionArchivo, SEEK_SET);
-                    fwrite(&Entidad_Anterior, sizeof(TEntidad), 1, arch);
-                }
-                else
+                if (strcmp(Entidad_Temporal.nombre, Entidad_Actual.nombre) > 0)
                 {
                     Entidad_Actual.ptrEntidad = Entidad_Temporal.direccionArchivo;
                     fseek(arch, Entidad_Actual.direccionArchivo, SEEK_SET);
                     fwrite(&Entidad_Actual, sizeof(TEntidad), 1, arch);
+                }
+                else
+                {
+                    Entidad_Anterior.ptrEntidad = Entidad_Temporal.direccionArchivo;
+                    Entidad_Temporal.ptrEntidad = Entidad_Actual.direccionArchivo;
+                    fseek(arch, posAnterior, SEEK_SET);
+                    fwrite(&Entidad_Anterior, sizeof(TEntidad), 1, arch);
                 }
             }
         }
 
         fseek(arch, Entidad_Temporal.direccionArchivo, SEEK_SET);
         fwrite(&Entidad_Temporal, sizeof(TEntidad), 1, arch);
-        printf("\n-- LA ENTIDAD '%s' HA SIDO AGREGADA CORRECTAMENTE. -- \n\n", Entidad_Temporal.nombre);
+        printf("\n-- LA ENTIDAD '%s' HA SIDO AGREGADA CORRECTAMENTE. --\n\n", Entidad_Temporal.nombre);
         fclose(arch);
     }
     else
     {
-        printf("-- NO SE ENCONTRO EL DICCIONARIO --\n\n");
+        printf("-- NO SE ENCONTRÓ EL DICCIONARIO --\n\n");
     }
 }
+
 
 TEntidad Eliminar_Entidad(char nom_Diccionario[MAX_LINE], char nom_Entidad[MAX_LINE])
 {
@@ -104,8 +97,10 @@ TEntidad Eliminar_Entidad(char nom_Diccionario[MAX_LINE], char nom_Entidad[MAX_L
         {
             fseek(arch, cab, SEEK_SET);
             fread(&Entidad_Actual, sizeof(TEntidad), 1, arch);
+
             if (strcmp(nom_Entidad, Entidad_Actual.nombre) == 0)
             {
+                // Eliminar la primera entidad
                 Entidad_Resultante = Entidad_Actual;
                 cab = Entidad_Actual.ptrEntidad;
                 fseek(arch, 0, SEEK_SET);
@@ -114,39 +109,41 @@ TEntidad Eliminar_Entidad(char nom_Diccionario[MAX_LINE], char nom_Entidad[MAX_L
             }
             else
             {
-                while (Entidad_Actual.ptrEntidad != -1 && strcmp(nom_Entidad, Entidad_Actual.nombre) != 0)
+                while (Entidad_Actual.ptrEntidad != -1 && !entidad_encontrada)
                 {
                     Entidad_Anterior = Entidad_Actual;
                     fseek(arch, Entidad_Anterior.ptrEntidad, SEEK_SET);
                     fread(&Entidad_Actual, sizeof(TEntidad), 1, arch);
-                }
-                if (strcmp(nom_Entidad, Entidad_Actual.nombre) == 0)
-                {
-                    Entidad_Resultante = Entidad_Actual;
-                    Entidad_Anterior.ptrEntidad = Entidad_Actual.ptrEntidad;
-                    fseek(arch, Entidad_Anterior.direccionArchivo, SEEK_SET);
-                    fwrite(&Entidad_Anterior, sizeof(TEntidad), 1, arch);
-                    entidad_encontrada = 1;
+
+                    if (strcmp(nom_Entidad, Entidad_Actual.nombre) == 0)
+                    {
+                        Entidad_Resultante = Entidad_Actual;
+                        Entidad_Anterior.ptrEntidad = Entidad_Actual.ptrEntidad;
+                        fseek(arch, Entidad_Anterior.direccionArchivo, SEEK_SET);
+                        fwrite(&Entidad_Anterior, sizeof(TEntidad), 1, arch);
+                        entidad_encontrada = 1;
+                    }
                 }
             }
+
             if (entidad_encontrada)
             {
                 printf("\n-- LA ENTIDAD '%s' HA SIDO ELIMINADA CORRECTAMENTE. --\n", nom_Entidad);
             }
             else
             {
-                printf("\n-- LA ENTIDAD NO EXISTE, ME HICISTE BUSCAR EN VANO πππ --\n\n");
+                printf("\n-- LA ENTIDAD NO EXISTE --\n\n");
             }
         }
         else
         {
-            printf("\n-- EL DICCIONARIO ESTA VACIO --\n\n");
+            printf("\n-- EL DICCIONARIO ESTÁ VACÍO --\n\n");
         }
         fclose(arch);
     }
     else
     {
-        printf("\n-- NO SE ENCONTRO EL DICCIONARIO --\n\n");
+        printf("\n-- NO SE ENCONTRÓ EL DICCIONARIO --\n\n");
     }
     return Entidad_Resultante;
 }
@@ -154,12 +151,12 @@ TEntidad Eliminar_Entidad(char nom_Diccionario[MAX_LINE], char nom_Entidad[MAX_L
 void modificar_Entidad(char nom_Archivo[MAX_LINE], char nom_Entidad[MAX_LINE])
 {
     FILE *arch;
-    TEntidad Entidad_Auxiliar, Entidad_Modificada, Entidad_Temporal;
+    TEntidad Entidad_Auxiliar, Entidad_Modificada;
+    long cab;
 
     arch = fopen(nom_Archivo, "rb+");
     if (arch)
     {
-        long cab;
         fread(&cab, sizeof(long), 1, arch);
 
         int encontrada = 0;
@@ -170,22 +167,23 @@ void modificar_Entidad(char nom_Archivo[MAX_LINE], char nom_Entidad[MAX_LINE])
 
             if (strcmp(Entidad_Auxiliar.nombre, nom_Entidad) == 0)
             {
+                // Leer la entidad original en Entidad_Modificada
                 long pos_modificar = ftell(arch) - sizeof(TEntidad);
                 fseek(arch, pos_modificar, SEEK_SET);
-                fread(&Entidad_Temporal, sizeof(TEntidad), 1, arch);
+                fread(&Entidad_Modificada, sizeof(TEntidad), 1, arch);
 
-                printf("\nINTRODUCE EL NUEVO NOMBRE PARA LA ENTIDAD : ");
+                // Solicitar el nuevo nombre para la entidad
+                printf("\nINTRODUCE EL NUEVO NOMBRE PARA LA ENTIDAD: ");
                 scanf(" %[^\n]", Entidad_Modificada.nombre);
 
-                Entidad_Modificada.ptrEntidad = Entidad_Temporal.ptrEntidad;
-                Entidad_Modificada.ptrAtributo = Entidad_Temporal.ptrAtributo;
-                Entidad_Modificada.direccionArchivo = Entidad_Temporal.direccionArchivo;
+                // Eliminar la entidad original
+                Eliminar_Entidad(nom_Archivo, nom_Entidad);
 
-                fseek(arch, pos_modificar, SEEK_SET);
-                fwrite(&Entidad_Modificada, sizeof(TEntidad), 1, arch);
+                // Crear la nueva entidad en la posición correcta
+                Crear_Nueva_Entidad(nom_Archivo, Entidad_Modificada);
 
                 encontrada = 1;
-                printf("\nLA ENTIDAD '%s' SE MODIFICO CORRECTAMENTE.\n\n", nom_Entidad);
+                printf("\nLA ENTIDAD '%s' SE MODIFICÓ CORRECTAMENTE.\n\n", nom_Entidad);
                 break;
             }
             cab = Entidad_Auxiliar.ptrEntidad;
@@ -200,9 +198,10 @@ void modificar_Entidad(char nom_Archivo[MAX_LINE], char nom_Entidad[MAX_LINE])
     }
     else
     {
-        printf("\n-- NO SE ENCONTRO EL DICCIONARIO --\n\n");
+        printf("\n-- NO SE ENCONTRÓ EL DICCIONARIO --\n\n");
     }
 }
+
 
 void Imprimir_Entidad_Actual(TEntidad Entidad_Actual)
 {

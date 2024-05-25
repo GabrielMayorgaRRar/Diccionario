@@ -69,35 +69,36 @@ void operar_diccionario(OpcionSubmenu opcionSeleccionada, char *nombreDiccionari
 
 void Imprimir_Diccionario(char *nombreDiccionario)
 {
-  FILE *arch;
-  long pos;
-  TEntidad Entidad_Actual;
-  TAtributo Atributo_Actual;
-  arch = fopen(nombreDiccionario, "rb");
-  if (arch)
-  {
-    fread(&pos, sizeof(long), 1, arch);
-    if (pos == -1)
+    FILE *arch;
+    long pos;
+    TEntidad Entidad_Actual;
+    TAtributo Atributo_Actual;
+    arch = fopen(nombreDiccionario, "rb");
+    if (arch)
     {
-      printf("\n-- EL DICCIONARIO ESTA VACIO --\n\n");
-      fclose(arch);
-      return;
+        fread(&pos, sizeof(long), 1, arch);
+        if (pos == -1)
+        {
+            printf("\n-- EL DICCIONARIO ESTÁ VACÍO --\n\n");
+            fclose(arch);
+            return;
+        }
+        while (pos != -1)
+        {
+            fseek(arch, pos, SEEK_SET);
+            fread(&Entidad_Actual, sizeof(TEntidad), 1, arch);
+            Imprimir_Entidad_Actual(Entidad_Actual);
+
+            long posAtributo = Entidad_Actual.ptrAtributo;
+            while (posAtributo != -1)
+            {
+                fseek(arch, posAtributo, SEEK_SET);
+                fread(&Atributo_Actual, sizeof(TAtributo), 1, arch);
+                Imprimir_Atributo_Actual(Atributo_Actual);
+                posAtributo = Atributo_Actual.ptrAtributo;
+            }
+            pos = Entidad_Actual.ptrEntidad;
+        }
+        fclose(arch);
     }
-    while (pos != -1)
-    {
-      fseek(arch, pos, SEEK_SET);
-      fread(&Entidad_Actual, sizeof(TEntidad), 1, arch);
-      Imprimir_Entidad_Actual(Entidad_Actual);
-      pos = Entidad_Actual.ptrAtributo;
-      while (pos != -1)
-      {
-        fseek(arch, pos, SEEK_SET);
-        fread(&Atributo_Actual, sizeof(TAtributo), 1, arch);
-        Imprimir_Atributo_Actual(Atributo_Actual);
-        pos = Atributo_Actual.ptrAtributo;
-      }
-      pos = Entidad_Actual.ptrEntidad;
-    }
-    fclose(arch);
-  }
 }

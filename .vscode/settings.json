@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "string.h": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "atributo.h": "c"
     }
 }
