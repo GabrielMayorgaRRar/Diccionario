@@ -228,3 +228,4 @@ void Imprimir_Entidad_Actual(TEntidad Entidad_Actual)
   printf("-PTRATRIBUTO: %ld\n", Entidad_Actual.ptrAtributo);
   printf("DIRECCION DEL DICCIONARIO: %ld\n", Entidad_Actual.direccionArchivo);
 }
+

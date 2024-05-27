@@ -8,3 +8,5 @@ all:
 	${CC} ${SRC} -o ${TARGET}
 clear:
 	rm *.out *.PASEME 
+
+	

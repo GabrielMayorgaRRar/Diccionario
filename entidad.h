@@ -23,4 +23,5 @@ void Capturar_Nombre_Entidad(TEntidad *Entidad_Temporal);
 void Crear_Nueva_Entidad(char nom_arch[MAX_LINE], TEntidad Entidad_Temporal);
 TEntidad Eliminar_Entidad(char nom_Diccionario[MAX_LINE], char nom_Entidad[MAX_LINE]);
 void modificar_Entidad(char nom_Archivo[MAX_LINE], char nom_Entidad[MAX_LINE]);
+
 #endif

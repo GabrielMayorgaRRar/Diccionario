@@ -51,3 +51,4 @@ void Menu_Tipo_Datos(void);
 TAtributo Buscar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], char nombre_Atributo[MAX_LINE]);
 
 #endif
+

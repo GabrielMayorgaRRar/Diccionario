@@ -28,3 +28,4 @@ void Imprimir_Diccionario(char *nombreDiccionario);
 void Imprimir_Entidad_Actual(TEntidad Entidad_Actual);
 void Imprimir_Atributo_Actual(TAtributo Atributo_Actual);
 #endif
+

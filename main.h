@@ -24,3 +24,4 @@ int Abrir_Diccionario(char *nom_arch);
 int Diccionario_Existir(char *nombre_archivo);
 
 #endif
+

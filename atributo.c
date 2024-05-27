@@ -249,6 +249,7 @@ void Modificar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_
                 printf("INTRODUZCA EL NUEVO NOMBRE: ");
                 scanf(" %[^\n]", Nombre);
                 strcpy(Atributo_Modificado.nombre, Nombre);
+                strcpy(Atributo_Auxiliar.nombre, Nombre);
                 Atributo_Modificado.Tam = Atributo_Auxiliar.Tam;
                 Atributo_Modificado.Tipo_de_Atributo = Atributo_Auxiliar.Tipo_de_Atributo;
                 break;
