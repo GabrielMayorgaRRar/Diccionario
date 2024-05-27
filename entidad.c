@@ -23,6 +23,22 @@ void Crear_Nueva_Entidad(char nom_arch[MAX_LINE], TEntidad Entidad_Temporal)
         Entidad_Temporal.direccionArchivo = ftell(arch);
         Entidad_Temporal.ptrEntidad = -1;
 
+        // Verificar si la entidad ya existe
+        fseek(arch, cab, SEEK_SET);
+        while (fread(&Entidad_Actual, sizeof(TEntidad), 1, arch))
+        {
+            if (strcmp(Entidad_Temporal.nombre, Entidad_Actual.nombre) == 0)
+            {
+                printf("\n-- LA ENTIDAD '%s' YA EXISTE. NO SE AGREGARÁ. --\n\n", Entidad_Temporal.nombre);
+                fclose(arch);
+                return; // Salir de la función si la entidad ya existe
+            }
+
+            if (Entidad_Actual.ptrEntidad == -1)
+                break; // Fin de la lista de entidades
+            fseek(arch, Entidad_Actual.ptrEntidad, SEEK_SET);
+        }
+
         if (cab == -1)
         {
             // Lista vacía, inserta la primera entidad
@@ -80,6 +96,7 @@ void Crear_Nueva_Entidad(char nom_arch[MAX_LINE], TEntidad Entidad_Temporal)
         printf("-- NO SE ENCONTRÓ EL DICCIONARIO --\n\n");
     }
 }
+
 
 
 TEntidad Eliminar_Entidad(char nom_Diccionario[MAX_LINE], char nom_Entidad[MAX_LINE])

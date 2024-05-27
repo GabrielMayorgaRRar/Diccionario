@@ -59,9 +59,10 @@ void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LI
 {
     FILE *arch;
     TEntidad Entidad_Temporal;
-    TAtributo Atributo_Actual;
-    long pos;
+    TAtributo Atributo_Actual, Atributo_Anterior;
+    long pos, posAnterior;
     int enc = 0;
+
     arch = fopen(nom_Diccionario, "rb+");
     if (arch)
     {
@@ -80,47 +81,66 @@ void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LI
             }
             if (enc)
             {
-                fseek(arch, Entidad_Temporal.ptrAtributo, SEEK_SET);
-                
-                // Leer la lista de atributos en memoria
-                TAtributo atributos[MAX_ATRIBUTOS];
-                int num_atributos = 0;
-                while (fread(&Atributo_Actual, sizeof(TAtributo), 1, arch) == 1) {
-                    atributos[num_atributos++] = Atributo_Actual;
+                fseek(arch, 0, SEEK_END);
+                Atributo_Temporal.direccionArchivo = ftell(arch);
+                pos = Entidad_Temporal.ptrAtributo;
+                posAnterior = -1;
+
+                while (pos != -1)
+                {
+                    fseek(arch, pos, SEEK_SET);
+                    fread(&Atributo_Actual, sizeof(TAtributo), 1, arch);
+                    if (strcmp(Atributo_Temporal.nombre, Atributo_Actual.nombre) == 0)
+                    {
+                        printf("\n-- YA EXISTE UN ATRIBUTO CON EL MISMO NOMBRE EN LA ENTIDAD --\n\n");
+                        fclose(arch);
+                        return;
+                    }
+                    if (strcmp(Atributo_Temporal.nombre, Atributo_Actual.nombre) < 0)
+                    {
+                        break;
+                    }
+                    posAnterior = pos;
+                    pos = Atributo_Actual.ptrAtributo;
                 }
 
-                // Insertar el nuevo atributo en la posición adecuada
-                int i;
-                for (i = num_atributos - 1; i >= 0 && strcmp(Atributo_Temporal.nombre, atributos[i].nombre) < 0; --i) {
-                    atributos[i + 1] = atributos[i];
+                if (posAnterior == -1)
+                { // Insertar al principio
+                    Atributo_Temporal.ptrAtributo = Entidad_Temporal.ptrAtributo;
+                    Entidad_Temporal.ptrAtributo = Atributo_Temporal.direccionArchivo;
+                    fseek(arch, Entidad_Temporal.direccionArchivo, SEEK_SET);
+                    fwrite(&Entidad_Temporal, sizeof(TEntidad), 1, arch);
                 }
-                atributos[i + 1] = Atributo_Temporal;
+                else
+                { // Insertar en medio o al final
+                    fseek(arch, posAnterior, SEEK_SET);
+                    fread(&Atributo_Anterior, sizeof(TAtributo), 1, arch);
+                    Atributo_Anterior.ptrAtributo = Atributo_Temporal.direccionArchivo;
+                    fseek(arch, posAnterior, SEEK_SET);
+                    fwrite(&Atributo_Anterior, sizeof(TAtributo), 1, arch);
 
-                // Reescribir la lista de atributos en el archivo
-                fseek(arch, Entidad_Temporal.ptrAtributo, SEEK_SET);
-                for (i = 0; i < num_atributos; ++i) {
-                    fwrite(&atributos[i], sizeof(TAtributo), 1, arch);
+                    Atributo_Temporal.ptrAtributo = pos;
                 }
+
+                fseek(arch, Atributo_Temporal.direccionArchivo, SEEK_SET);
+                fwrite(&Atributo_Temporal, sizeof(TAtributo), 1, arch);
             }
             else
             {
-                printf("\n-- LA ENTIDAD NO EXISTE --\n\n");
+                printf("\n-- LA ENTIDAD NO EXISTE, ME HICISTE BUSCAR EN VANO πππ --\n\n");
             }
         }
         else
         {
-            printf("\n-- EL DICCIONARIO ESTÁ VACÍO --\n\n");
+            printf("\n-- EL DICCIONARIO ESTA VACIO --\n\n");
         }
         fclose(arch);
     }
     else
     {
-        printf("\n-- NO SE ENCONTRÓ EL DICCIONARIO --\n\n");
+        printf("\n-- NO SE ENCONTRO EL DICCIONARIO --\n\n");
     }
 }
-
-
-
 
 TAtributo Eliminar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], char nombre_Atributo[MAX_LINE])
 {
@@ -229,11 +249,14 @@ void Modificar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_
                 printf("INTRODUZCA EL NUEVO NOMBRE: ");
                 scanf(" %[^\n]", Nombre);
                 strcpy(Atributo_Modificado.nombre, Nombre);
+                Atributo_Modificado.Tam = Atributo_Auxiliar.Tam;
+                Atributo_Modificado.Tipo_de_Atributo = Atributo_Auxiliar.Tipo_de_Atributo;
                 break;
             case TIPO:
                 Capturar_Tipo_Dato(&Auxiliar_Tipo, &Auxiliar_Tam);
                 Atributo_Modificado.Tipo_de_Atributo = Auxiliar_Tipo;
                 Atributo_Modificado.Tam = Auxiliar_Tam;
+                strcpy(Atributo_Modificado.nombre, Atributo_Auxiliar.nombre);
                 break;
             case CONTINUAR:
                 system("clear");
@@ -334,3 +357,88 @@ TAtributo Buscar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MA
 
     return atributoNoEncontrado; // Atributo no encontrado
 }
+
+/*
+void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LINE], TAtributo Atributo_Temporal)
+{
+    FILE *arch;
+    TEntidad Entidad_Temporal;
+    TAtributo Atributo_Actual;
+    long pos;
+    int enc = 0;
+    arch = fopen(nom_Diccionario, "rb+");
+    if (arch)
+    {
+        fread(&pos, sizeof(long), 1, arch);
+        if (pos != -1)
+        {
+            while (pos != -1 && !enc)
+            {
+                fseek(arch, pos, SEEK_SET);
+                fread(&Entidad_Temporal, sizeof(TEntidad), 1, arch);
+                if (strcmp(nombre_Entidad, Entidad_Temporal.nombre) == 0)
+                {
+                    enc = 1;
+                }
+                pos = Entidad_Temporal.ptrEntidad;
+            }
+            if (enc)
+            {
+                fseek(arch, 0, SEEK_END);
+                Atributo_Temporal.direccionArchivo = ftell(arch);
+                Atributo_Temporal.ptrEntidad = Entidad_Temporal.ptrEntidad;
+                pos = Entidad_Temporal.ptrAtributo;
+                while (pos != -1)
+                {
+                    fseek(arch, pos, SEEK_SET);
+                    fread(&Atributo_Actual, sizeof(TAtributo), 1, arch);
+                    if (strcmp(Atributo_Temporal.nombre, Atributo_Actual.nombre) == 0)
+                    {
+                        printf("\n-- YA EXISTE UN ATRIBUTO CON EL MISMO NOMBRE EN LA ENTIDAD --\n\n");
+                        fclose(arch);
+                        return;
+                    }
+                    pos = Atributo_Actual.ptrAtributo;
+                }
+
+                if (Entidad_Temporal.ptrAtributo == -1)
+                {
+                    Entidad_Temporal.ptrAtributo = Atributo_Temporal.direccionArchivo;
+                    fseek(arch, Entidad_Temporal.direccionArchivo, SEEK_SET);
+                    fwrite(&Entidad_Temporal, sizeof(TEntidad), 1, arch);
+                }
+                else
+                {
+                    pos = Entidad_Temporal.ptrAtributo;
+                    while (pos != -1)
+                    {
+                        fseek(arch, pos, SEEK_SET);
+                        fread(&Atributo_Actual, sizeof(TAtributo), 1, arch);
+                        pos = Atributo_Actual.ptrAtributo;
+                    }
+                    Atributo_Actual.ptrAtributo = Atributo_Temporal.direccionArchivo;
+                    fseek(arch, Atributo_Actual.direccionArchivo, SEEK_SET);
+                    fwrite(&Atributo_Actual, sizeof(TAtributo), 1, arch);
+                }
+                fseek(arch, Atributo_Temporal.direccionArchivo, SEEK_SET);
+                fwrite(&Atributo_Temporal, sizeof(TAtributo), 1, arch);
+            }
+            else
+            {
+                printf("\n-- LA ENTIDAD NO EXISTE, ME HICISTE BUSCAR EN VANO πππ --\n\n");
+            }
+        }
+        else
+        {
+            printf("\n-- EL DICCIONARIO ESTA VACIO --\n\n");
+        }
+        fclose(arch);
+    }
+    else
+    {
+        printf("\n-- NO SE ENCONTRO EL DICCIONARIO --\n\n");
+    }
+}
+
+
+*/
