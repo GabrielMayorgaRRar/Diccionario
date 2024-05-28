@@ -46,7 +46,7 @@ void operar_diccionario(OpcionSubmenu opcionSeleccionada, char *nombreDiccionari
     break;
   case MODIFICAR_ATRIBUTO:
     printf("\n-- HAS SELECCIONADO 'MODIFICAR UN ATRIBUTO EXISTENTE' --\n\n");
-    printf("INTRODUZCA EL NOMBRE DE LA ENTIDAD A LA QUE DESEE ELIMINAR EL ATRIBUTO: \n");
+    printf("INTRODUZCA EL NOMBRE DE LA ENTIDAD EN LA QUE ESTA EL ATRIBUTO MODIFICAR: \n");
     scanf(" %[^\n]", Nombre);
     printf("INTRODUZCA EL NOMBRE DEL ATRIBUTO QUE DESEE MODIFICAR: \n");
     scanf(" %[^\n]", Nombre_2);

@@ -21,7 +21,7 @@ void Capturar_Tipo_Dato(int *TipoD, int *Tam)
     while (opcionActual < CARACTER || opcionActual > EXTRA)
     {
         Menu_Tipo_Datos();
-        printf("INTRODUZCA LA OPERACION QUE DESEA HACER: ");
+        printf("INTRODUZCA EL TIPO DE DATO QUE DESEA ASIGNAR: ");
         scanf("%hi", &opcionActual);
         switch (opcionActual)
         {
@@ -124,6 +124,7 @@ void Agregar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_LI
 
                 fseek(arch, Atributo_Temporal.direccionArchivo, SEEK_SET);
                 fwrite(&Atributo_Temporal, sizeof(TAtributo), 1, arch);
+                printf("\n-- EL ATRIBUTO SE AÑADIO CORRECTAMENTE --\n\n");
             }
             else
             {
@@ -232,7 +233,7 @@ void Modificar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_
     int opcionActual = SIN_SELECCIO;
     int Auxiliar_Tipo, Auxiliar_Tam;
     Atributo_Auxiliar = Buscar_Atributo(nom_Diccionario, nombre_Entidad, nombre_Atributo);
-    if (Atributo_Auxiliar.Tam == -1)
+    if (Atributo_Auxiliar.Tam == -5)
     {
         printf("\n-EL ATRIBUTO NO EXISTE\n\n");
     }
@@ -269,11 +270,13 @@ void Modificar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MAX_
                 printf("\n\nOPCION NO VALIDA\nPOR FAVOR ELIJA UNA OPCION VALIDA\n\n");
                 break;
             }
+            
         }
         Atributo_Modificado.ptrAtributo = Atributo_Auxiliar.ptrAtributo;
         Atributo_Modificado.direccionArchivo = Atributo_Auxiliar.direccionArchivo;
         Eliminar_Atributo(nom_Diccionario, nombre_Entidad, nombre_Atributo);
         Agregar_Atributo(nom_Diccionario, nombre_Entidad, Atributo_Modificado);
+        printf("\n-- EL ATRIBUTO SE MODIFICO CORRECTAMENTE --\n\n");
     }
 }
 
@@ -315,7 +318,7 @@ TAtributo Buscar_Atributo(char nom_Diccionario[MAX_LINE], char nombre_Entidad[MA
     TAtributo Atributo_Actual;
     TEntidad Entidad_Actual;
     long pos;
-    TAtributo atributoNoEncontrado = {-1, "", 0, 0, -1};
+    TAtributo atributoNoEncontrado = {-5, "", -5, 0, -1};
 
     arch = fopen(nom_Diccionario, "rb");
     if (arch)

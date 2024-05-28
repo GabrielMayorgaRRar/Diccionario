@@ -67,7 +67,7 @@ void procesar_opcion_seleccionada(OpcionMenu opcionSeleccionada)
         Existe_Diccionario = Abrir_Diccionario(nombreDiccionario);
         if (Existe_Diccionario == 1)
         {
-            printf("\nABRIENDO...\n\n");
+            printf("\nEL DICCIONARIO HA SIDO ABIERTO\n\n");
             do
             {
                 Menu_de_Operaciones();
@@ -83,7 +83,7 @@ void procesar_opcion_seleccionada(OpcionMenu opcionSeleccionada)
         break;
     case CERRAR_PROGRAMA:
         system("clear");
-        puts("CERRANDO...");
+        puts("SALIENDO...");
         break;
     default:
         system("clear");
@@ -131,7 +131,7 @@ int Abrir_Diccionario(char *nom_arch)
     {
         return ban;
     }
-    printf("\nEL DICCIONARIO HA SIDO ABIERTO\n\n");
+    printf("\nABRIENDO...\n\n");
     ban = 1;
     fclose(arch);
     return ban;
@@ -150,4 +150,3 @@ int Diccionario_Existir(char *nombre_archivo)
         return 1;
     }
 }
-
